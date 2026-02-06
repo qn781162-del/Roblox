@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arceus X Neo & Script Hub</title>
+    <style>
+        :root {
+            --pink-light: #ffe4e1;
+            --pink-main: #ffb6c1;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --green: #4CAF50;
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--pink-light); 
+            color: var(--black); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 20px 0; 
+        }
+
+        .container { 
+            background: var(--white); 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            text-align: center; 
+            max-width: 450px; 
+            width: 90%;
+            border: 2px solid var(--pink-main);
+        }
+
+        h2 { margin-bottom: 20px; font-size: 22px; color: var(--black); }
+
+        .btn { 
+            display: block; width: 100%; padding: 12px; margin: 10px 0; 
+            border: none; border-radius: 10px; cursor: pointer; 
+            font-weight: bold; text-decoration: none; transition: 0.3s; 
+            box-sizing: border-box;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .btn-black { background: var(--black); color: var(--white); }
+        .btn-pink { background: var(--pink-main); color: var(--black); }
+        .btn-blue { background: #007bff; color: white; }
+        
+        .btn:hover { opacity: 0.8; transform: scale(1.01); }
+
+        .input-group { margin: 25px 0; text-align: left; }
+        input[type="text"] { 
+            width: 100%; padding: 12px; border: 2px solid var(--pink-light); 
+            border-radius: 10px; box-sizing: border-box; outline: none; margin-bottom: 10px;
+        }
+
+        .code-box {
+            background: #f9f9f9; padding: 15px; border-radius: 10px; 
+            text-align: left; overflow-x: auto; font-size: 12px; 
+            border: 1px solid #eee; color: #555; margin-bottom: 10px;
+            white-space: pre-wrap; word-wrap: break-word;
+            font-family: monospace;
+        }
+
+        .label-text {
+            font-size: 12px; font-weight: bold; margin-bottom: 5px;
+            display: block; text-align: left; color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ARCEUS X NEO & SCRIPT</h2>
+
+    <a href="https://www.mediafire.com/file/lmqzqhwhiq8ojqp/Roblox_Arceus_X_NEO_2.0.0.apk/file" 
+       class="btn btn-black" target="_blank">
+       TẢI ARCEUS X NEO 2.0.0
+    </a>
+
+    <a href="https://www.mediafire.com/file/z60g22lyvmq5tee/Android+ID+Changer+V4" 
+       class="btn btn-blue" target="_blank">
+       TẢI ANDROID ID CHANGER V4
+    </a>
+
+    <hr style="border: 0.5px solid #eee; margin: 20px 0;">
+
+    <span class="label-text">COPY ID:</span>
+    <div class="code-box" id="idText">x85929j7cef6q4g4</div>
+    <button class="btn btn-pink" onclick="copyToClipboard('idText', this, 'COPY ID')">COPY ID</button>
+
+    <div class="input-group">
+        <input type="text" id="userInput" placeholder="Nhập tin nhắn của bạn...">
+        <button class="btn btn-pink" onclick="sendMessage()">GỬI TIN NHẮN ĐẾN DISCORD</button>
+    </div>
+
+    <span class="label-text">SCRIPT BANANA HUB:</span>
+    <div class="code-box" id="scriptCode">repeat wait() until game:IsLoaded() and game.Players.LocalPlayer 
+getgenv().Key = "2a0839ad8e17792f93655078" 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaHub.lua"))()</div>
+    
+    <button class="btn btn-pink" onclick="copyToClipboard('scriptCode', this, 'COPY SCRIPT')">COPY SCRIPT</button>
+</div>
+
+<script>
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1467088562322276568/4tcdqOd-ejFO5ndT_x4eNwBfAtfttKz61qhZUQqGTW5fsruLvb6cQIpdIStmU2TXdzcq";
+
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const message = input.value.trim();
+        if (message === "") { alert("Vui lòng nhập văn bản!"); return; }
+
+        fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: message })
+        })
+        .then(() => { alert("Đã gửi thành công!"); input.value = ""; })
+        .catch(() => alert("Lỗi khi gửi!"));
+    }
+
+    // Hàm copy tổng hợp cho cả ID và Script
+    function copyToClipboard(elementId, btn, originalText) {
+        const text = document.getElementById(elementId).innerText;
+        
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccess(btn, originalText);
+            }).catch(() => fallbackCopy(text, btn, originalText));
+        } else {
+            fallbackCopy(text, btn, originalText);
+        }
+    }
+
+    function fallbackCopy(text, btn, originalText) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showSuccess(btn, originalText);
+        } catch (err) {
+            alert('Lỗi copy, bạn hãy chọn bằng tay!');
+        }
+        document.body.removeChild(textArea);
+    }
+
+    function showSuccess(btn, originalText) {
+        btn.innerText = "ĐÃ COPY! ✅";
+        btn.style.background = "#4CAF50";
+        btn.style.color = "white";
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = "";
+            btn.style.color = "";
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
